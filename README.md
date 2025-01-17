@@ -26,6 +26,7 @@ git clone https://github.com/Kenxu2022/neteaselrc.git
 ```bash
 pip install -r requirements.txt
 ```
+在`config.conf`中的`BASE_URL`处填入NeteaseCloudMusicApi实例的地址，你也可以根据需要修改其他配置项  
 切换到包含歌曲文件的路径，直接运行即可：
 ```bash
 python /path/to/script/file
