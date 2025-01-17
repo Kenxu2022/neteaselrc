@@ -7,20 +7,38 @@ from configparser import ConfigParser
 from lyrics import parseLyrics
 from api import searchMusic, searchAlbum, getAlbumInfo
 
+# parse argument
+parser = ArgumentParser(prog='neteaselrc', description='Download lyrics from Netease Cloud Music')
+parser.add_argument('-d', '--directory', required=False, help='specify directory')
+parser.add_argument('-al', '--album', required=False, help='specify album for better accuracy')
+parser.add_argument('-ar', '--artist', required=False, help='specify artist for better accuracy')
+args = parser.parse_args()
+dir = args.directory
+album = args.album
+artist = args.artist
+
 # get config directory
 scriptDir = os.path.dirname(os.path.abspath(__file__))
 configPath = os.path.join(scriptDir, "config.conf")
 
+# parse config
 config = ConfigParser()
 config.read(configPath)
-
 omitListStr = config['General']['OMIT_LIST']
 extListStr = config['General']['EXTENSION_LIST']
 OMIT_LIST = [keyword.strip() for keyword in omitListStr.split(',') if keyword.strip()]
 EXTENSION_LIST = [keyword.strip() for keyword in extListStr.split(',')]
 
+# check whether BASE_URL is empty
+BASE_URL = config['General']['BASE_URL']
+if (not BASE_URL):
+    print("NeteaseCloudMusicApi实例地址为空，请检查配置！")
+    sys.exit()
+
+# check whether OMIT_LIST is empty
 if (not OMIT_LIST):
     print("未设置忽略关键词名单，将跳过匹配")
+
 
 def getFile(dir):
     fileName = []
@@ -42,15 +60,6 @@ def ifLyricsExist(dir, name):
                     break
     return lrcExist
 
-# parse argument
-parser = ArgumentParser(prog='neteaselrc', description='Download lyrics from Netease Cloud Music')
-parser.add_argument('-d', '--directory', required=False, help='specify directory')
-parser.add_argument('-al', '--album', required=False, help='specify album for better accuracy')
-parser.add_argument('-ar', '--artist', required=False, help='specify artist for better accuracy')
-args = parser.parse_args()
-dir = args.directory
-album = args.album
-artist = args.artist
 
 if (dir is None):
     dir = os.path.abspath('.')
@@ -76,8 +85,6 @@ if (searchType == 1):
         print(f"搜索名称: {searchName}")
 
         # omit if file name contain certain keywords
-        print(music.lower())
-        print(OMIT_LIST)
         if (any(keyword in music.lower() for keyword in OMIT_LIST)):
             choice = input("检测到特定关键词，该文件可能为纯音乐，ENTER可跳过：")
             if (choice == ''):
