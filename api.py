@@ -1,5 +1,5 @@
 import requests
-import os
+import os, sys
 from configparser import ConfigParser
 
 scriptDir = os.path.dirname(os.path.abspath(__file__))
@@ -9,6 +9,9 @@ config = ConfigParser()
 config.read(configPath)
 
 BASE_URL = config['General']['BASE_URL']
+if (not BASE_URL):
+    print("NeteaseCloudMusicApi实例地址为空，请检查配置！")
+    sys.exit()
 
 def searchMusic(name):
     url = f"{BASE_URL}/cloudsearch"
