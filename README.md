@@ -45,7 +45,7 @@ python /path/to/script/file -d /path/to/music/folder -ar artist -al album
 
 # 截图
 
-> 这里使用了`alias neteaselrc='python3 /data/dev/neteaselrc/main.py'`简化输入，墙裂推荐
+> 这里使用了`alias neteaselrc='python3 /path/to/script/file'`简化输入，墙裂推荐
 
 ![按歌曲匹配](img/1.png)
 
